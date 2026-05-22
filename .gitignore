@@ -1,0 +1,24 @@
+# Virtual Environment
+.venv/
+__pycache__/
+*.pyc
+
+# Local Data and Models (since these are large and synced to S3/Mongo)
+data/
+models/
+
+# Credentials and Environment
+.env
+.env*
+
+# IDE and OS
+.DS_Store
+.vscode/
+.idea/
+
+# Other Files
+blueprint_igi.pages 
+blueprint_igi.pdf
+blueprint.pdf 
+
+
