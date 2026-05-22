@@ -4,8 +4,6 @@ import json
 import joblib
 import numpy as np
 import pandas as pd
-import torch
-
 # Ensure project root is in the path
 SRC_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_ROOT = os.path.dirname(SRC_DIR)
@@ -18,8 +16,7 @@ from src.config import (
     WINDOW_SIZE, HORIZON, MODELS_DIR
 )
 from src.utils import log_prediction_to_mongo, download_from_s3
-from src.components.model_training import VisibilityGRUForecaster
-from scripts.z3_verification import SymbolicGuardrail
+
 
 class PredictionPipeline:
     def __init__(self):
@@ -74,6 +71,12 @@ class PredictionPipeline:
                 self.xgb_models[h] = joblib.load(xgb_path)
             else:
                 raise FileNotFoundError(f"🚨 Missing XGBoost model for horizon t+{h+1}h: {xgb_path}")
+
+        # Dynamic imports to avoid macOS OpenMP / Z3 / Torch threading segmentation fault.
+        # Importing torch/z3 after joblib.load of XGBoost avoids the crash.
+        import torch
+        from src.components.model_training import VisibilityGRUForecaster
+        from scripts.z3_verification import SymbolicGuardrail
                 
         # Load GRU Sequence Model
         input_dim = len(FEATURE_COLS)
@@ -220,6 +223,7 @@ class PredictionPipeline:
             xgb_forecasts.append(float(pred))
             
         # 3. Deep GRU Prediction
+        import torch
         X_tensor = torch.tensor(X_seq_scaled, dtype=torch.float32).unsqueeze(0)  # shape: (1, 24, 48)
         with torch.no_grad():
             gru_scaled_pred = self.gru_model(X_tensor).numpy()[0]  # shape: (6,)
