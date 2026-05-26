@@ -186,3 +186,38 @@ The summary table below aggregates the aviation classification and Brier calibra
 1. **Conservative Regression Bias**: At longer horizons (like $t+6$h), deep networks (GRU) and gradient boosting models (XGBoost) fail to predict *any* fog collapse event below 800m or 500m, yielding a Recall of `0.0000`. This happens because standard loss minimizers penalize large errors heavily, driving predictions toward the safe climatological mean. Random Forest (and its Z3-verified version) is the only model that retains the variance structure needed to flag safety-critical collapses (Recall of `0.3000` at $t+6$h).
 2. **False Alarm Mitigation via Z3**: At the $t+6$h horizon, the Z3 solver intercepts impossible predictions and corrects them. This directly reduces false positive (FP) predictions from 43 to 37, lowering the False Alarm Ratio (FAR) from `0.5244` to `0.5211` and improving Precision from `0.4756` to `0.4788`. This indicates that adding physical axioms reduces false warnings, which is highly valuable for landing operations.
 3. **Probabilistic Calibration Quality**: By applying "Normal dressing" to deterministic forecasts using validation RMSE, we successfully mapped forecast visibilities to event probabilities. The Z3-Verified RF model improves the Brier Score at $t+1$h for both $800$m (`0.0697` to `0.0696`) and $500$m (`0.0365` to `0.0364`) events, showing that enforcing physical consistency also improves the quality of forecast probabilities.
+
+---
+
+## Phase 6: Web Dashboard Beautification & Interactive Analytics
+
+To prepare the repository for academic review and premium presentations, we undertook a comprehensive front-end redesign to transform the basic Flask interface into a publication-grade, interactive scientific console.
+
+### 1. Advanced Glassmorphic Design System
+We implemented a dark cosmic design language inside [dashboard.css](file:///Users/vedikaagrawal/Documents/climate-visibility-new/src/app/static/css/dashboard.css) utilizing tailormade HSL color variables:
+* **Background Atmosphere**: Ambient indigo, magenta, and cyan glow orbs (`.glass-bg-decor`) drifting smoothly in the background via CSS keyframe animations.
+* **Translucent Cards**: Frosted layout panels using advanced CSS backdrop filters, thin borders (`rgba(255, 255, 255, 0.05)`), and responsive drop shadows that glow on hover.
+* **Visual Dividers**: Sections organized systematically to guide the viewer from inputs (left) to real-time verification timelines and physical parameters (right).
+
+### 2. Dual-Control Simulation Sandbox
+We enhanced [index.html](file:///Users/vedikaagrawal/Documents/climate-visibility-new/src/app/templates/index.html) to support side-by-side inputs for METAR overrides:
+* **Bidirectional Sync**: Combined precise number input boxes with range sliders (`input[type="range"]`). In [dashboard.js](file:///Users/vedikaagrawal/Documents/climate-visibility-new/src/app/static/js/dashboard.js), event listeners map updates from sliders to inputs and vice-versa in real-time.
+* **Responsive Ranges**: Configured to exact physical limits matching regional atmospheric models (e.g. AOD scaled from 0.05 to 5.00; temperatures from -5 to 50°C).
+
+### 3. Re-engineered Weather Coupling Progress Gauges
+Derived thermodynamic parameters now update with interactive visual progress meters rather than plain text badges:
+* **Relative Humidity**: Glowing blue progress track updating dynamically as temperature and dewpoint variables change.
+* **Dew Point Depression**: Red warning-gradient gauge representing the distance to saturation.
+* **Wind Stagnation Lamp**: Active pulsing amber warning indicator if wind speed drops below the critical 1.5 m/s radiational fog threshold.
+* **Aerosol Proxy**: Purple-pink spectrum gauge representing Angstrom ratio loads.
+
+### 4. Interactive Model Discrimination Charting
+To visualize historical verification statistics fetched from the `/api/metrics` endpoint, we added a second Chart.js bar chart canvas:
+* **Control Filters**: Dropdown selectors for Runway safety threshold (800m CAT I limit vs 500m severe LVO limit) and forecast horizons ($t+1$h vs $t+6$h).
+* **Grouped Model Bars**: Renders Precision, Recall, and F1-Scores side-by-side across all 4 modeling streams, immediately demonstrating Z3's performance advantages.
+
+### 5. Detailed Guardrail Corrective Audit Log
+When Z3 detects a physical axiom violation, the Audit Card displays:
+* **Violated Axiom Cards**: Explicit warnings showing which physical rule triggered (e.g., dry air impossibility or stagnant aerosol bounds).
+* **Clamping Diff Tracker**: Table comparisons detailing the exact numerical correction applied by the solver across horizons (e.g., `t+6h Horizon: 4125m -> 3500m (Aerosol Clamping Limit)`).
+

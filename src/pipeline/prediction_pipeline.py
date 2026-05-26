@@ -102,7 +102,7 @@ class PredictionPipeline:
         df['timestamp'] = pd.to_datetime(df['timestamp'])
         
         # Filter for test partition (Nov-Dec 2024)
-        test_df = df[df['timestamp'] >= '2024-11-01 00:00:00'].copy()
+        test_df = df[df['timestamp'] >= pd.Timestamp('2024-11-01 00:00:00')].copy()
         
         # Sort by visibility ascending to show challenging fog conditions first, then sample
         foggy_df = test_df[test_df['airport_visibility'] < 1500].sort_values('timestamp').head(limit // 2)

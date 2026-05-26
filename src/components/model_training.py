@@ -3,12 +3,12 @@ import json
 import joblib
 import numpy as np
 import pandas as pd
+import xgboost as xgb
 import torch
 import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestRegressor
-import xgboost as xgb
 
 from src.config import (
     ENGINEERED_DATA_FILE, FEATURE_COLS, TARGET_COL,
@@ -26,8 +26,8 @@ class VisibilitySequenceDataset(Dataset):
     def __len__(self):
         return len(self.X)
         
-    def __getitem__(self, idx):
-        return self.X[idx], self.y[idx]
+    def __getitem__(self, index):
+        return self.X[index], self.y[index]
 
 # PyTorch GRU Forecaster Model
 class VisibilityGRUForecaster(nn.Module):
@@ -184,7 +184,7 @@ class ModelTraining:
         optimizer = torch.optim.Adam(gru_model.parameters(), lr=GRU_PARAMS["lr"])
         
         best_val_loss = float('inf')
-        best_weights = None
+        best_weights = gru_model.state_dict().copy()
         
         epochs = GRU_PARAMS["epochs"]
         for epoch in range(epochs):
@@ -197,7 +197,7 @@ class ModelTraining:
                 loss.backward()
                 optimizer.step()
                 train_loss += loss.item() * X_batch.size(0)
-            train_loss /= len(train_loader.dataset)
+            train_loss /= len(train_dataset)
             
             # Validation
             gru_model.eval()
@@ -207,7 +207,7 @@ class ModelTraining:
                     outputs = gru_model(X_batch)
                     loss = criterion(outputs, y_batch)
                     val_loss += loss.item() * X_batch.size(0)
-            val_loss /= len(val_loader.dataset)
+            val_loss /= len(val_dataset)
             
             print(f"  Epoch {epoch+1:02d}/{epochs} | Train MSE: {train_loss:.4f} | Val MSE: {val_loss:.4f}")
             

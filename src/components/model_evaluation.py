@@ -4,6 +4,7 @@ import json
 import joblib
 import numpy as np
 import pandas as pd
+import xgboost as xgb
 import torch
 import torch.nn as nn
 from scipy.stats import norm

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Delhi-NCR Runway Visibility Forecast Dashboard</title>
+    <title>AeroVerify: Runway Visibility Forecast &amp; Symbolic Guardrails</title>
     <!-- Google Fonts: Outfit (headings) & Inter (body) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,292 +21,469 @@
     <div class="glass-bg-decor decor-3"></div>
 
     <div class="dashboard-container">
-        <!-- HEADER / HERO -->
-        <header class="app-header">
-            <div class="header-main">
-                <div class="brand">
-                    <span class="icon-wrap"><i class="fa-solid fa-wind-warning"></i></span>
-                    <div>
-                        <h1>AeroVerify</h1>
-                        <p class="subtitle">Airport Runway Visibility Forecasting &amp; Symbolic Guardrail Verification</p>
-                    </div>
-                </div>
-                <div class="system-pills">
-                    <span class="status-pill sat" id="system-status-indicator">
-                        <span class="dot"></span> System Ready
-                    </span>
-                    <span class="status-pill local-mode">
-                        <i class="fa-solid fa-server"></i> Local Database Mode
-                    </span>
+        <!-- LEFT SIDEBAR -->
+        <aside class="left-sidebar glass-card">
+            <div class="brand">
+                <span class="icon-wrap"><i class="fa-solid fa-jet-fighter-up"></i></span>
+                <div>
+                    <h1>AeroVerify</h1>
+                    <p class="subtitle">M.Tech Thesis Forecast Suite</p>
                 </div>
             </div>
-        </header>
-
-        <!-- TOP GRID: SYSTEM STATE & AUDIT PANEL -->
-        <section class="system-specs-grid">
-            <div class="glass-card spec-card">
-                <h3><i class="fa-solid fa-microchip"></i> Connections</h3>
-                <div class="spec-list">
-                    <div class="spec-item">
-                        <span>Z3 Formal Solver:</span>
-                        <strong class="text-green">ONLINE (v4.16)</strong>
-                    </div>
-                    <div class="spec-item">
-                        <span>MongoDB Telemetry:</span>
-                        <strong id="mongo-status">LOCAL FALLBACK</strong>
-                    </div>
-                    <div class="spec-item">
-                        <span>AWS S3 Artifacts:</span>
-                        <strong id="s3-status">LOCAL STORAGE</strong>
-                    </div>
-                </div>
-            </div>
-            <div class="glass-card spec-card">
-                <h3><i class="fa-solid fa-shield-halved"></i> Active Physical Constraints</h3>
-                <div class="spec-list">
-                    <div class="spec-item">
-                        <span>Rule 1 (Dry Air):</span>
-                        <span>RH &lt; 45% or DPD &gt; 12°C &rArr; Vis &ge; 800m</span>
-                    </div>
-                    <div class="spec-item">
-                        <span>Rule 2 (Stagnation):</span>
-                        <span>RH &ge; 98% and WSI == 1 &rArr; Vis &le; 2500m</span>
-                    </div>
-                    <div class="spec-item">
-                        <span>Rule 3 (Aerosols):</span>
-                        <span>AOD &gt; 1.8 &rArr; Vis &le; 3500m</span>
-                    </div>
-                </div>
-            </div>
-            <div class="glass-card spec-card">
-                <h3><i class="fa-solid fa-network-wired"></i> Ensemble Models</h3>
-                <div class="spec-list">
-                    <div class="spec-item">
-                        <span>Tree Regression:</span>
-                        <span>Multi-Horizon RF &amp; XGBoost</span>
-                    </div>
-                    <div class="spec-item">
-                        <span>Neural Sequence:</span>
-                        <span>PyTorch GRU (24h History)</span>
-                    </div>
-                    <div class="spec-item">
-                        <span>Guardrail:</span>
-                        <span>Z3 Symbolic Layer Interceptor</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- MAIN LAYOUT: SANDBOX TEST BENCH (LEFT) & FORECAST DISPLAY (RIGHT) -->
-        <div class="main-workspace">
             
-            <!-- LEFT COLUMN: TEST BENCH / INPUT SANDBOX -->
-            <aside class="workspace-sidebar">
-                <div class="glass-card sandbox-card">
-                    <div class="card-header">
-                        <h2><i class="fa-solid fa-sliders"></i> Simulation Sandbox</h2>
-                        <button type="button" class="btn-reset" id="btn-reset-defaults" title="Reset to historical default values">
-                            <i class="fa-solid fa-rotate-left"></i> Reset
-                        </button>
-                    </div>
+            <div class="system-pills">
+                <span class="status-pill sat" id="system-status-indicator">
+                    <span class="dot"></span> System Ready
+                </span>
+                <span class="status-pill local-mode">
+                    <i class="fa-solid fa-database"></i> Telemetry Active
+                </span>
+            </div>
+            
+            <!-- TAB LIST MENU -->
+            <nav class="nav-menu">
+                <button class="nav-tab active" data-target="tab-simulator">
+                    <i class="fa-solid fa-gauge-high"></i> Simulator
+                </button>
+                <button class="nav-tab" data-target="tab-performance">
+                    <i class="fa-solid fa-chart-simple"></i> Model Analytics
+                </button>
+                <button class="nav-tab" data-target="tab-calibration">
+                    <i class="fa-solid fa-chart-area"></i> Calibration Curves
+                </button>
+                <button class="nav-tab" data-target="tab-guardrails">
+                    <i class="fa-solid fa-shield-halved"></i> Safety Guardrails
+                </button>
+            </nav>
+            
+            <footer class="app-sidebar-footer">
+                <p>IIT Kanpur &bull; Aerospace</p>
+                <div class="tech-stack-details">
+                    <span>Python 3.12</span> &bull; 
+                    <span>PyTorch</span> &bull; 
+                    <span>Z3 Solver</span>
+                </div>
+            </footer>
+        </aside>
+        
+        <!-- RIGHT PANEL (TAB CONTENTS) -->
+        <main class="main-panel">
+            
+            <!-- TAB 1: SIMULATOR -->
+            <div class="tab-content active" id="tab-simulator">
+                <div class="main-workspace">
                     
-                    <form id="sandbox-form" class="sandbox-form">
-                        <!-- HISTORICAL starting point selector -->
-                        <div class="form-group">
-                            <label for="historical-timestamp">
-                                <i class="fa-solid fa-calendar-day"></i> Select Historical Starting point
-                            </label>
-                            <div class="select-wrapper">
-                                <select id="historical-timestamp" name="historical-timestamp">
-                                    <option value="" disabled selected>Loading winter test events...</option>
-                                </select>
+                    <!-- LEFT COLUMN: TEST BENCH / INPUT SANDBOX -->
+                    <aside class="workspace-sidebar">
+                        <div class="glass-card sandbox-card">
+                            <div class="card-header">
+                                <h2><i class="fa-solid fa-sliders"></i> Simulator Controls</h2>
+                                <button type="button" class="btn-reset" id="btn-reset-defaults" title="Reset to historical default values">
+                                    <i class="fa-solid fa-rotate-left"></i> Reset
+                                </button>
                             </div>
-                            <span class="field-help">Loads the required 24h meteorological history automatically.</span>
+                            
+                            <form id="sandbox-form" class="sandbox-form">
+                                <!-- HISTORICAL starting point selector -->
+                                <div class="form-group">
+                                    <label for="historical-timestamp">
+                                        <i class="fa-solid fa-calendar-days"></i> Historical Fog Event
+                                    </label>
+                                    <div class="select-wrapper">
+                                        <select id="historical-timestamp" name="historical-timestamp">
+                                            <option value="" disabled selected>Loading winter test events...</option>
+                                        </select>
+                                    </div>
+                                    <span class="field-help">Preloads observed 24h winter sequence variables.</span>
+                                </div>
+
+                                <div class="form-divider"><i class="fa-solid fa-wind"></i> METAR Atmospheric Overrides</div>
+
+                                <div class="form-group">
+                                    <div class="form-label-row">
+                                        <label for="airport_temp"><i class="fa-solid fa-temperature-three-quarters"></i> Airport Temp (°C)</label>
+                                        <input type="number" id="airport_temp" name="airport_temp" step="any" min="-5" max="50" class="precise-input">
+                                    </div>
+                                    <div class="slider-container">
+                                        <input type="range" id="slider_airport_temp" min="-5" max="50" step="0.1" class="slider-input">
+                                        <div class="slider-labels">
+                                            <span>-5°C</span>
+                                            <span>50°C</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="form-label-row">
+                                        <label for="airport_dew"><i class="fa-solid fa-temperature-empty"></i> Dewpoint (°C)</label>
+                                        <input type="number" id="airport_dew" name="airport_dew" step="any" min="-10" max="40" class="precise-input">
+                                    </div>
+                                    <div class="slider-container">
+                                        <input type="range" id="slider_airport_dew" min="-10" max="40" step="0.1" class="slider-input">
+                                        <div class="slider-labels">
+                                            <span>-10°C</span>
+                                            <span>40°C</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="form-label-row">
+                                        <label for="airport_wind_speed"><i class="fa-solid fa-gauge-simple-high"></i> Wind Speed (m/s)</label>
+                                        <input type="number" id="airport_wind_speed" name="airport_wind_speed" step="any" min="0" max="30" class="precise-input">
+                                    </div>
+                                    <div class="slider-container">
+                                        <input type="range" id="slider_airport_wind_speed" min="0" max="30" step="0.1" class="slider-input">
+                                        <div class="slider-labels">
+                                            <span>0 m/s</span>
+                                            <span>30 m/s</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="form-label-row">
+                                        <label for="airport_wind_dir"><i class="fa-solid fa-compass"></i> Wind Direction (°)</label>
+                                        <input type="number" id="airport_wind_dir" name="airport_wind_dir" step="any" min="0" max="360" class="precise-input">
+                                    </div>
+                                    <div class="slider-container">
+                                        <input type="range" id="slider_airport_wind_dir" min="0" max="360" step="1" class="slider-input">
+                                        <div class="slider-labels">
+                                            <span>0° (N)</span>
+                                            <span>360° (N)</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="form-label-row">
+                                        <label for="urban_temp"><i class="fa-solid fa-city"></i> Urban Temp (°C)</label>
+                                        <input type="number" id="urban_temp" name="urban_temp" step="any" min="-5" max="50" class="precise-input">
+                                    </div>
+                                    <div class="slider-container">
+                                        <input type="range" id="slider_urban_temp" min="-5" max="50" step="0.1" class="slider-input">
+                                        <div class="slider-labels">
+                                            <span>-5°C</span>
+                                            <span>50°C</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="form-label-row">
+                                        <label for="rural_temp"><i class="fa-solid fa-tree"></i> Rural Temp (°C)</label>
+                                        <input type="number" id="rural_temp" name="rural_temp" step="any" min="-5" max="50" class="precise-input">
+                                    </div>
+                                    <div class="slider-container">
+                                        <input type="range" id="slider_rural_temp" min="-5" max="50" step="0.1" class="slider-input">
+                                        <div class="slider-labels">
+                                            <span>-5°C</span>
+                                            <span>50°C</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-divider"><i class="fa-solid fa-smog"></i> NASA Aerosol Optical Depth</div>
+
+                                <div class="form-group">
+                                    <div class="form-label-row">
+                                        <label for="AOD_500nm"><i class="fa-solid fa-filter"></i> AOD 500nm (Green)</label>
+                                        <input type="number" id="AOD_500nm" name="AOD_500nm" step="any" min="0.05" max="5.0" class="precise-input">
+                                    </div>
+                                    <div class="slider-container">
+                                        <input type="range" id="slider_AOD_500nm" min="0.05" max="5.0" step="0.01" class="slider-input">
+                                        <div class="slider-labels">
+                                            <span>0.05</span>
+                                            <span>5.00</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="form-label-row">
+                                        <label for="AOD_440nm"><i class="fa-solid fa-filter"></i> AOD 440nm (Blue)</label>
+                                        <input type="number" id="AOD_440nm" name="AOD_440nm" step="any" min="0.05" max="5.0" class="precise-input">
+                                    </div>
+                                    <div class="slider-container">
+                                        <input type="range" id="slider_AOD_440nm" min="0.05" max="5.0" step="0.01" class="slider-input">
+                                        <div class="slider-labels">
+                                            <span>0.05</span>
+                                            <span>5.00</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn-predict" id="btn-submit-simulation">
+                                    <span>Execute Flight Audit Simulation</span>
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </aside>
+                    
+                    <!-- RIGHT COLUMN: RESULTS & AUDIT -->
+                    <div class="workspace-main">
+                        <!-- FORECAST VISUALIZATION CARD -->
+                        <div class="glass-card main-chart-card">
+                            <div class="card-header">
+                                <h2><i class="fa-solid fa-chart-line"></i> Multi-Horizon Forecasting Timeline</h2>
+                                <div class="forecast-legend-pills">
+                                    <span class="legend-pill" style="--color: #94a3b8">RF (Raw)</span>
+                                    <span class="legend-pill" style="--color: #f59e0b">XGBoost</span>
+                                    <span class="legend-pill" style="--color: #ec4899">Deep GRU</span>
+                                    <span class="legend-pill" style="--color: #10b981">Z3-Verified</span>
+                                </div>
+                            </div>
+                            <div class="chart-wrapper">
+                                <canvas id="forecastTimelineChart"></canvas>
+                            </div>
                         </div>
 
-                        <div class="form-divider">METAR Weather Parameter Overrides</div>
-
-                        <div class="form-row-2">
-                            <div class="form-group">
-                                <label for="airport_temp">Airport Temp (°C)</label>
-                                <input type="number" id="airport_temp" name="airport_temp" step="0.1" min="-5" max="50">
+                        <!-- AUDIT & METEOROLOGICAL DERIVATIVES ROW -->
+                        <div class="results-subgrid">
+                            <!-- Z3 RESOLVER STATE -->
+                            <div class="glass-card status-display-card" id="z3-audit-card">
+                                <div class="audit-header">
+                                    <h3><i class="fa-solid fa-shield-halved"></i> Guardrail Verification Audit</h3>
+                                    <span class="badge" id="audit-badge">SAT</span>
+                                </div>
+                                <div class="audit-content">
+                                    <div class="audit-status-large" id="audit-status-large">SATISFIED</div>
+                                    <p class="audit-description" id="audit-description">
+                                        Predictions comply with all deterministic meteorological physical axioms. No corrections applied.
+                                    </p>
+                                    <div class="violations-wrapper hidden" id="violations-list-container">
+                                        <h4><i class="fa-solid fa-triangle-exclamation"></i> Violated Axioms:</h4>
+                                        <ul id="violations-list"></ul>
+                                    </div>
+                                    <div class="clamping-diffs-container hidden" id="clamping-diffs-container">
+                                        <h4><i class="fa-solid fa-arrows-spin"></i> Clamped Safety Fallbacks:</h4>
+                                        <div class="clamping-list" id="clamping-list">
+                                            <!-- Populated dynamically via JS -->
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="airport_dew">Airport Dewpoint (°C)</label>
-                                <input type="number" id="airport_dew" name="airport_dew" step="0.1" min="-10" max="40">
+
+                            <!-- METEOROLOGICAL DERIVED VALUES -->
+                            <div class="glass-card weather-derived-card">
+                                <h3><i class="fa-solid fa-calculator"></i> Re-engineered Coupling</h3>
+                                <div class="derived-grid">
+                                    <div class="derived-item">
+                                        <div class="derived-meta">
+                                            <span class="label">Relative Humidity:</span>
+                                            <strong id="val-rh">--%</strong>
+                                        </div>
+                                        <div class="gauge-bar-track">
+                                            <div class="gauge-bar-fill blue-gauge" id="gauge-rh" style="width: 0%"></div>
+                                        </div>
+                                        <span class="calc-formula">Magnus-Tetens Equation</span>
+                                    </div>
+                                    <div class="derived-item">
+                                        <div class="derived-meta">
+                                            <span class="label">Dew Point Depression:</span>
+                                            <strong id="val-dpd">--°C</strong>
+                                        </div>
+                                        <div class="gauge-bar-track">
+                                            <div class="gauge-bar-fill red-gauge" id="gauge-dpd" style="width: 0%"></div>
+                                        </div>
+                                        <span class="calc-formula">T<sub>dry</sub> - T<sub>dew</sub></span>
+                                    </div>
+                                    <div class="derived-item">
+                                        <div class="derived-meta">
+                                            <span class="label">Wind Stagnation (WSI):</span>
+                                        </div>
+                                        <div class="wsi-status-box stagnant-inactive" id="wsi-lamp-box">
+                                            <span class="wsi-lamp"></span>
+                                            <span class="wsi-status-text" id="val-wsi">VENTILATED</span>
+                                        </div>
+                                        <span class="calc-formula">Speed &lt; 1.5 m/s (Fog risk)</span>
+                                    </div>
+                                    <div class="derived-item">
+                                        <div class="derived-meta">
+                                            <span class="label">Aerosol Scattering Proxy:</span>
+                                            <strong id="val-asep">--</strong>
+                                        </div>
+                                        <div class="gauge-bar-track">
+                                            <div class="gauge-bar-fill purple-gauge" id="gauge-asep" style="width: 0%"></div>
+                                        </div>
+                                        <span class="calc-formula">AOD<sub>500</sub> / AOD<sub>440</sub> ratio</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
-                        <div class="form-row-2">
-                            <div class="form-group">
-                                <label for="airport_wind_speed">Wind Speed (m/s)</label>
-                                <input type="number" id="airport_wind_speed" name="airport_wind_speed" step="0.1" min="0" max="30">
-                            </div>
-                            <div class="form-group">
-                                <label for="airport_wind_dir">Wind Direction (°)</label>
-                                <input type="number" id="airport_wind_dir" name="airport_wind_dir" step="1" min="0" max="360">
-                            </div>
-                        </div>
-
-                        <div class="form-row-2">
-                            <div class="form-group">
-                                <label for="urban_temp">Urban Temp (°C)</label>
-                                <input type="number" id="urban_temp" name="urban_temp" step="0.1" min="-5" max="50">
-                            </div>
-                            <div class="form-group">
-                                <label for="rural_temp">Rural Temp (°C)</label>
-                                <input type="number" id="rural_temp" name="rural_temp" step="0.1" min="-5" max="50">
-                            </div>
-                        </div>
-
-                        <div class="form-divider">NASA Aerosol Optical Index Overrides</div>
-
-                        <div class="form-row-2">
-                            <div class="form-group">
-                                <label for="AOD_500nm">AOD 500nm</label>
-                                <input type="number" id="AOD_500nm" name="AOD_500nm" step="0.01" min="0.05" max="5.0">
-                            </div>
-                            <div class="form-group">
-                                <label for="AOD_440nm">AOD 440nm</label>
-                                <input type="number" id="AOD_440nm" name="AOD_440nm" step="0.01" min="0.05" max="5.0">
-                            </div>
-                        </div>
-
-                        <button type="submit" class="btn-predict" id="btn-submit-simulation">
-                            <span>Verify &amp; Forecast Runway Visibility</span>
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </button>
-                    </form>
+                    </div>
                 </div>
-            </aside>
-
-            <!-- RIGHT COLUMN: RESULTS & AUDIT -->
-            <main class="workspace-main">
-                <!-- FORECAST VISUALIZATION CARD -->
-                <div class="glass-card main-chart-card">
-                    <div class="card-header">
-                        <h2><i class="fa-solid fa-chart-line"></i> Multi-Horizon Forecasting Timeline</h2>
-                        <div class="forecast-legend-pills">
-                            <span class="legend-pill" style="--color: #7f8c8d">RF</span>
-                            <span class="legend-pill" style="--color: #e67e22">XGBoost</span>
-                            <span class="legend-pill" style="--color: #9b59b6">Deep GRU</span>
-                            <span class="legend-pill" style="--color: #27ae60">Z3-Verified</span>
+            </div>
+            
+            <!-- TAB 2: MODEL PERFORMANCE ANALYTICS -->
+            <div class="tab-content" id="tab-performance">
+                <div class="tab-header-wrap">
+                    <h2><i class="fa-solid fa-chart-simple"></i> Model Analytics &amp; Discrimination Suite</h2>
+                    <p class="tab-subtitle">Compare performance metrics across models for different runway categories and horizons.</p>
+                </div>
+                
+                <!-- INTERACTIVE ANALYTICS CHART CONTAINER -->
+                <div class="glass-card analytics-card" style="margin-bottom: 1.5rem;">
+                    <div class="analytics-card-left">
+                        <h3><i class="fa-solid fa-sliders"></i> Performance Controls</h3>
+                        <p style="margin-bottom:1rem;">Select different operational runway categories and forecast horizons to compare Precision, Recall (Probability of Detection), and F1-scores across models.</p>
+                        
+                        <div class="analytics-filters-row">
+                            <div class="filter-group">
+                                <label for="filter-threshold"><i class="fa-solid fa-eye-low-vision"></i> Safety Threshold</label>
+                                <div class="select-wrapper">
+                                    <select id="filter-threshold">
+                                        <option value="800.0" selected>800 meters (CAT I Runway Limit)</option>
+                                        <option value="500.0">500 meters (Severe Fog Operations)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="filter-group">
+                                <label for="filter-horizon"><i class="fa-solid fa-history"></i> Horizon</label>
+                                <div class="select-wrapper">
+                                    <select id="filter-horizon">
+                                        <option value="t+1h" selected>t+1h Forecast (Short term)</option>
+                                        <option value="t+6h">t+6h Forecast (Medium term)</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="chart-wrapper">
-                        <canvas id="forecastTimelineChart"></canvas>
+                    <div class="analytics-card-right">
+                        <div class="chart-wrapper">
+                            <canvas id="modelMetricsComparisonChart"></canvas>
+                        </div>
                     </div>
                 </div>
 
-                <!-- AUDIT & METEOROLOGICAL DERIVATIVES ROW -->
-                <div class="results-subgrid">
-                    <!-- Z3 RESOLVER STATE -->
-                    <div class="glass-card status-display-card" id="z3-audit-card">
-                        <div class="audit-header">
-                            <h3><i class="fa-solid fa-shield-virus"></i> Guardrail Audit</h3>
-                            <span class="badge" id="audit-badge">SAT</span>
-                        </div>
-                        <div class="audit-content">
-                            <div class="audit-status-large" id="audit-status-large">SATISFIED</div>
-                            <p class="audit-description" id="audit-description">
-                                Predictions comply with all deterministic meteorological physical axioms. No corrections applied.
-                            </p>
-                            <div class="violations-wrapper hidden" id="violations-list-container">
-                                <h4>Violated Axioms Detected:</h4>
-                                <ul id="violations-list"></ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- METEOROLOGICAL DERIVED VALUES -->
-                    <div class="glass-card weather-derived-card">
-                        <h3><i class="fa-solid fa-cloud-sun"></i> Re-engineered Coupling</h3>
-                        <div class="derived-grid">
-                            <div class="derived-item">
-                                <span class="label">Relative Humidity:</span>
-                                <strong id="val-rh">--%</strong>
-                                <span class="calc-formula">Magnus-Tetens Equation</span>
-                            </div>
-                            <div class="derived-item">
-                                <span class="label">Dew Point Depression:</span>
-                                <strong id="val-dpd">--°C</strong>
-                                <span class="calc-formula">T<sub>dry</sub> - T<sub>dew</sub></span>
-                            </div>
-                            <div class="derived-item">
-                                <span class="label">Wind Stagnation Index:</span>
-                                <strong id="val-wsi">--</strong>
-                                <span class="calc-formula">Speed &lt; 1.5 m/s</span>
-                            </div>
-                            <div class="derived-item">
-                                <span class="label">Aerosol Proxy (ASEP):</span>
-                                <strong id="val-asep">--</strong>
-                                <span class="calc-formula">AOD<sub>500</sub> / AOD<sub>440</sub></span>
-                            </div>
-                        </div>
+                <!-- TABULATED METRICS -->
+                <div class="glass-card metrics-card">
+                    <h3><i class="fa-solid fa-database"></i> Complete Calibration &amp; Brier Scores Summary</h3>
+                    <div class="table-responsive">
+                        <table class="metrics-table" id="metrics-data-table">
+                            <thead>
+                                <tr>
+                                    <th>Horizon</th>
+                                    <th>Safety Threshold</th>
+                                    <th>Model Class</th>
+                                    <th>Precision</th>
+                                    <th>Recall (POD)</th>
+                                    <th>False Alarm Ratio</th>
+                                    <th>False Alarm Rate</th>
+                                    <th>F1-Score</th>
+                                    <th>Brier Score</th>
+                                    <th>Contingency (TP/FP/FN/TN)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="10" class="text-center">Loading evaluation metrics from system storage...</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-            </main>
-        </div>
-
-        <!-- BOTTOM AREA: RESEARCH METRICS & STATIC CALIBRATION PLOTS -->
-        <section class="research-metrics-section">
-            <div class="section-title-wrap">
-                <h2><i class="fa-solid fa-graduation-cap"></i> Thesis Performance &amp; Safety Calibration Suite</h2>
-                <p>Aviation-grade safety verification statistics based on the winter fog test set partition (Nov-Dec 2024)</p>
             </div>
 
-            <!-- TABULATED METRICS -->
-            <div class="glass-card metrics-card">
-                <h3><i class="fa-solid fa-table-list"></i> Classification Calibration &amp; Brier Scores</h3>
-                <div class="table-responsive">
-                    <table class="metrics-table" id="metrics-data-table">
-                        <thead>
-                            <tr>
-                                <th>Horizon</th>
-                                <th>Safety Threshold</th>
-                                <th>Model Class</th>
-                                <th>Precision</th>
-                                <th>Recall (POD)</th>
-                                <th>False Alarm Ratio</th>
-                                <th>False Alarm Rate</th>
-                                <th>F1-Score</th>
-                                <th>Brier Score</th>
-                                <th>Contingency (TP/FP/FN/TN)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td colspan="10" class="text-center">Loading evaluation metrics from system storage...</td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <!-- TAB 3: CALIBRATION CURVES -->
+            <div class="tab-content" id="tab-calibration">
+                <div class="tab-header-wrap">
+                    <h2><i class="fa-solid fa-compass-calibration"></i> Calibration &amp; Discrimination Plots</h2>
+                    <p class="tab-subtitle">Reliability diagrams and ROC curves calculated over the peak winter fog validation dataset.</p>
+                </div>
+                
+                <!-- STATIC PLOTS GRID -->
+                <div class="plots-grid">
+                    <div class="glass-card plot-card">
+                        <h3><i class="fa-solid fa-chart-area"></i> Reliability Diagram (t+6h Horizon)</h3>
+                        <div class="plot-container">
+                            <img src="/static/img/reliability_diagram.png" alt="Reliability Diagram" onerror="this.src='https://placehold.co/600x480/090a0f/white?text=Awaiting+Evaluation+Outputs'">
+                        </div>
+                        <p class="plot-caption">Compares forecasted probabilities of fog collapse (&lt;800m) against actual observed frequency. Closer to diagonal represents superior calibration.</p>
+                    </div>
+                    <div class="glass-card plot-card">
+                        <h3><i class="fa-solid fa-bullseye"></i> ROC-AUC Discrimination Curves (t+6h Horizon)</h3>
+                        <div class="plot-container">
+                            <img src="/static/img/roc_auc_curve.png" alt="ROC-AUC Curves" onerror="this.src='https://placehold.co/600x480/090a0f/white?text=Awaiting+Evaluation+Outputs'">
+                        </div>
+                        <p class="plot-caption">Evaluates true positive detection vs. false alarm rates. Higher Area Under Curve (AUC) indicates greater discrimination ability.</p>
+                    </div>
                 </div>
             </div>
 
-            <!-- STATIC PLOTS CAROUSEL -->
-            <div class="plots-grid">
-                <div class="glass-card plot-card">
-                    <h3><i class="fa-solid fa-chart-area"></i> Reliability Diagram (t+6h Horizon)</h3>
-                    <div class="plot-container">
-                        <img src="/static/img/reliability_diagram.png" alt="Reliability Diagram" onerror="this.src='https://placehold.co/600x480/23242e/white?text=Awaiting+Evaluation+Outputs'">
-                    </div>
-                    <p class="plot-caption">Compares forecasted probabilities of fog collapse (&lt;800m) against actual observed frequency. Closer to diagonal represents superior calibration.</p>
+            <!-- TAB 4: SAFETY GUARDRAILS -->
+            <div class="tab-content" id="tab-guardrails">
+                <div class="tab-header-wrap">
+                    <h2><i class="fa-solid fa-shield-halved"></i> Formal Physical Guardrails &amp; Solver Configuration</h2>
+                    <p class="tab-subtitle">Deterministic constraints verified at runtime via Microsoft Research Z3 Solver.</p>
                 </div>
-                <div class="glass-card plot-card">
-                    <h3><i class="fa-solid fa-circle-dot"></i> ROC-AUC Discrimination Curves (t+6h Horizon)</h3>
-                    <div class="plot-container">
-                        <img src="/static/img/roc_auc_curve.png" alt="ROC-AUC Curves" onerror="this.src='https://placehold.co/600x480/23242e/white?text=Awaiting+Evaluation+Outputs'">
+                
+                <section class="system-specs-grid">
+                    <div class="glass-card spec-card">
+                        <h3><i class="fa-solid fa-network-wired"></i> Connection Broker</h3>
+                        <div class="spec-list">
+                            <div class="spec-item">
+                                <span>Z3 Formal Solver:</span>
+                                <strong class="text-green">ONLINE (v4.12+)</strong>
+                            </div>
+                            <div class="spec-item">
+                                <span>MongoDB Telemetry:</span>
+                                <strong id="mongo-status" class="text-green">LOCAL LOGS</strong>
+                            </div>
+                            <div class="spec-item">
+                                <span>AWS S3 Artifacts:</span>
+                                <strong id="s3-status">LOCAL FALLBACK</strong>
+                            </div>
+                        </div>
                     </div>
-                    <p class="plot-caption">Evaluates true positive detection vs. false alarm rates. Higher Area Under Curve (AUC) indicates greater discrimination ability.</p>
+                    <div class="glass-card spec-card">
+                        <h3><i class="fa-solid fa-shield-halved"></i> Active Physical Constraints</h3>
+                        <div class="spec-list">
+                            <div class="spec-item">
+                                <span>Rule 1 (Dry Air):</span>
+                                <span>RH &lt; 45% or DPD &gt; 12°C &rArr; Vis &ge; 800m</span>
+                            </div>
+                            <div class="spec-item">
+                                <span>Rule 2 (Stagnation):</span>
+                                <span>RH &ge; 98% and WSI == 1 &rArr; Vis &le; 2500m</span>
+                            </div>
+                            <div class="spec-item">
+                                <span>Rule 3 (Aerosols):</span>
+                                <span>AOD &gt; 1.8 &rArr; Vis &le; 3500m</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="glass-card spec-card">
+                        <h3><i class="fa-solid fa-microchip"></i> Ensemble Architectures</h3>
+                        <div class="spec-list">
+                            <div class="spec-item">
+                                <span>Tree Regression:</span>
+                                <span>Multi-Horizon RF &amp; XGBoost</span>
+                            </div>
+                            <div class="spec-item">
+                                <span>Sequence Learning:</span>
+                                <span>PyTorch GRU (24h Window)</span>
+                            </div>
+                            <div class="spec-item">
+                                <span>Guardrail Filter:</span>
+                                <span>Z3 Symbolic Interception Layer</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <div class="glass-card" style="margin-top: 1.5rem;">
+                    <h3><i class="fa-solid fa-book-open"></i> Thesis Methodology</h3>
+                    <p style="margin-top:0.5rem; line-height: 1.6;">
+                        This M.Tech research implements a hybrid Neuro-Symbolic forecasting pipeline. 
+                        While standard machine learning architectures (GRU, XGBoost, RF) capture the complex atmospheric interactions, they are prone to physically inconsistent errors at longer horizons. 
+                        By routing predictions through a symbolic execution filter built on Z3, we guarantee that all predictions comply with basic physical laws of atmospheric dry-out, aerosol light attenuation, and stagnant radiation fog accumulation.
+                    </p>
                 </div>
             </div>
-        </section>
-
-        <!-- FOOTER -->
-        <footer class="app-footer">
-            <p>&copy; 2026 M.Tech Research Project &bull; Indian Institute of Technology Kanpur &bull; Aerospace Engineering</p>
-            <p class="tech-stack-details">Python 3.12 &bull; PyTorch &bull; Microsoft Z3 SMT Solver &bull; Flask &bull; Chart.js</p>
-        </footer>
+            
+        </main>
     </div>
 
     <!-- Main Client Handler JS -->
