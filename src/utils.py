@@ -1,11 +1,34 @@
 import os
 import json
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 
-# Setup basic logging
-logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
-logger = logging.getLogger(__name__)
+# Setup robust centralized logging to console and a persistent file
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+local_log_dir = os.path.join(project_root, "logs")
+os.makedirs(local_log_dir, exist_ok=True)
+log_file_path = os.path.join(local_log_dir, "pipeline_execution.log")
+
+# Create logger
+pipeline_logger = logging.getLogger("AeroVerifyPipeline")
+pipeline_logger.setLevel(logging.INFO)
+
+# Avoid adding duplicate handlers if logger is imported multiple times
+if not pipeline_logger.handlers:
+    formatter = logging.Formatter("%(asctime)s [%(levelname)s] (%(name)s) %(message)s")
+    
+    # Console Handler
+    console_handler = logging.StreamHandler()
+    console_handler.setFormatter(formatter)
+    pipeline_logger.addHandler(console_handler)
+    
+    # File Handler
+    file_handler = logging.FileHandler(log_file_path, encoding="utf-8")
+    file_handler.setFormatter(formatter)
+    pipeline_logger.addHandler(file_handler)
+
+# Keep the module's alias for backwards compatibility
+logger = pipeline_logger
 
 # Manual dotenv loader to keep poetry environment light and zero-dependency
 def load_env():
@@ -49,7 +72,7 @@ def log_prediction_to_mongo(input_data, raw_forecasts, verified_forecasts, statu
     Saves to MongoDB if online, otherwise appends to a local JSON lines file.
     """
     log_record = {
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "input_features": input_data,
         "raw_forecasts_meters": [float(v) for v in raw_forecasts],
         "verified_forecasts_meters": [float(v) for v in verified_forecasts],

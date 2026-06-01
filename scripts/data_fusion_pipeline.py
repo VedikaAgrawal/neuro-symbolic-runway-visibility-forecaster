@@ -127,7 +127,7 @@ def fuse_aerosols_and_export(df_air, df_urb, df_rur, aeronet_file, output_file):
     master_df = pd.merge(master_df, df_rur, on='timestamp', how='outer')
     
     # Normalize hourly timestamps to daily date keys for AOD merging
-    master_df['date_key'] = master_df['timestamp'].dt.normalize()
+    master_df['date_key'] = pd.DatetimeIndex(master_df['timestamp']).normalize()
     
     print("Merging spatial observations with daily atmospheric aerosol indexes...")
     final_fused_df = pd.merge(master_df, df_daily_aero, on='date_key', how='left')

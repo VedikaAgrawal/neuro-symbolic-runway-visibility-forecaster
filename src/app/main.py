@@ -115,5 +115,7 @@ def get_metrics():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    # Start web app server on port 5050
-    app.run(host="0.0.0.0", port=5050, debug=True)
+    # Render dynamically binds the port specified in the PORT environment variable
+    port = int(os.environ.get("PORT", 5050))
+    debug_mode = os.environ.get("FLASK_ENV") == "development"
+    app.run(host="0.0.0.0", port=port, debug=debug_mode)
