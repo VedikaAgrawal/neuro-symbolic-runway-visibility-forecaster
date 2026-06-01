@@ -12,38 +12,86 @@ GitHub natively renders the flowchart below detailing the end-to-end data pipeli
 
 ```mermaid
 graph TD
-    subgraph Raw Ingestion & Spatial Fusion
-        A["NOAA ISD (Delhi Airport - Station 421810)"] & B["NOAA ISD (Urban Core - Station 421820)"] & C["NOAA ISD (Rural Baseline - Station 421390)"] & D["NASA AERONET (Column Aerosol Optical Depth)"] -->|Hourly Chronological Fusion| E["delhi_2024_master_fused.csv"]
+    %% Define Node Styles via Classes
+    classDef default fill:#1e293b,stroke:#334155,stroke-width:1px,color:#f1f5f9,rx:8px,ry:8px;
+    classDef ingest fill:#0f172a,stroke:#0ea5e9,stroke-width:2px,color:#f1f5f9,rx:8px,ry:8px;
+    classDef feature fill:#0f172a,stroke:#6366f1,stroke-width:2px,color:#f1f5f9,rx:8px,ry:8px;
+    classDef model fill:#0f172a,stroke:#a855f7,stroke-width:2px,color:#f1f5f9,rx:8px,ry:8px;
+    classDef guardrail fill:#0f172a,stroke:#f43f5e,stroke-width:2px,color:#f1f5f9,rx:8px,ry:8px;
+    classDef dashboard fill:#0f172a,stroke:#10b981,stroke-width:2px,color:#f1f5f9,rx:8px,ry:8px;
+    classDef dataset fill:#1e293b,stroke:#94a3b8,stroke-width:1px,stroke-dasharray: 5 5,color:#cbd5e1,rx:5px,ry:5px;
+
+    %% Subgraphs
+    subgraph Ingestion ["🌐 Phase 1: Spatial Data Fusion"]
+        A["NOAA Delhi Airport (Station 421810)"]:::ingest
+        B["NOAA Urban Core (Station 421820)"]:::ingest
+        C["NOAA Rural Baseline (Station 421390)"]:::ingest
+        D["NASA AERONET Column AOD"]:::ingest
+        E[("delhi_2024_master_fused.csv")]:::dataset
+        
+        A --> E
+        B --> E
+        C --> E
+        D --> E
     end
 
-    subgraph Atmospheric Feature Engineering
-        E -->|Domain Knowledge Calculations| F[Feature Engineering Suite]
-        F -->|Magnus-Tetens RH & Dew Point Depression| G[Thermodynamic Features]
-        F -->|Wind Stagnation Index & U/V Vectors| H[Kinematic Features]
-        F -->|Aerosol Scattering Proxy & Gradients| I[Spatial-Optical Features]
-        G & H & I --> J["delhi_2024_engineered.csv"]
+    subgraph FeatureEngineering ["🧪 Phase 2: Domain Feature Engineering"]
+        F["Domain Knowledge Suite"]:::feature
+        G["Thermodynamic Features (Magnus-Tetens RH, DPD)"]:::feature
+        H["Kinematic Features (Stagnancy, U/V Wind)"]:::feature
+        I["Spatial-Optical Features (Aerosol Proxy, Gradients)"]:::feature
+        J[("delhi_2024_engineered.csv")]:::dataset
+
+        E --> F
+        F --> G
+        F --> H
+        F --> I
+        G --> J
+        H --> J
+        I --> J
     end
 
-    subgraph Multi-Model Sequence Forecasting
-        J -->|24-hour Sliding Window Sequencing| K[Multi-Horizon Sequence Dataset]
-        K -->|Multi-Horizon RF Regressors| L[Tabular Baselines]
-        K -->|Multi-Horizon XGBoost Regressor| M[Gradient Boosted Baselines]
-        K -->|Deep PyTorch GRU Recurrent Network| N[Deep Sequence Modeling]
+    subgraph Modeling ["🤖 Phase 3: Multi-Model Sequencing"]
+        K["24-Hour Sliding Window Sequencing"]:::model
+        L["Multi-Horizon Random Forest"]:::model
+        M["Multi-Horizon XGBoost"]:::model
+        N["Deep PyTorch GRU Recurrent Net"]:::model
+
+        J --> K
+        K --> L
+        K --> M
+        K --> N
     end
 
-    subgraph Z3 Symbolic Guardrails
-        L & M & N -->|Raw ML Forecasts: t+1 to t+6| O[Z3 SMT Solver Interception]
-        P[METAR Physical Overrides] -->|Relative Humidity, DPD, Wind, AOD| O
-        O -->|Axiom 1: Dry Air Impossibility| Q[Safety Compliance Filter]
-        O -->|Axiom 2: Saturated Air Stagnation Limit| Q
-        O -->|Axiom 3: Aerosol Attenuation Boundary| Q
-        Q -->|SAT: Clear Check| R[Verified Predictions Passed Through]
-        Q -->|UNSAT: Violation Trigger| S[SMT Optimization Override & Clamp]
+    subgraph Guardrail ["🛡️ Phase 4: Z3 SMT Symbolic Guardrails"]
+        O["Z3 SMT Verification Interceptor"]:::guardrail
+        P["METAR Real-time Parameter Overrides"]:::guardrail
+        Q["Physical Axioms (Dry Air, Stagnation, Aerosol Attenuation)"]:::guardrail
+        R["SAT: Approved Prediction"]:::guardrail
+        S["UNSAT: SMT Optimization Override & Clamp"]:::guardrail
+
+        L --> O
+        M --> O
+        N --> O
+        P --> O
+        O --> Q
+        Q -->|SAT| R
+        Q -->|UNSAT| S
     end
 
-    subgraph Scientific Web Interface
-        R & S --> T[Interactive Glassmorphic Dashboard API]
+    subgraph Interface ["📊 Phase 6: Glassmorphic UI Dashboard"]
+        T["Interactive Simulator Console API"]:::dashboard
+        
+        R --> T
+        S --> T
     end
+
+    %% Subgraph Styling
+    style Ingestion fill:#0b0f19,stroke:#0ea5e9,stroke-width:1px,stroke-dasharray: 3 3
+    style FeatureEngineering fill:#0b0f19,stroke:#6366f1,stroke-width:1px,stroke-dasharray: 3 3
+    style Modeling fill:#0b0f19,stroke:#a855f7,stroke-width:1px,stroke-dasharray: 3 3
+    style Guardrail fill:#0b0f19,stroke:#f43f5e,stroke-width:1px,stroke-dasharray: 3 3
+    style Interface fill:#0b0f19,stroke:#10b981,stroke-width:1px,stroke-dasharray: 3 3
 ```
 
 ---
