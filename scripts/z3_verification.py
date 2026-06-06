@@ -4,7 +4,7 @@ import z3
 
 class SymbolicGuardrail:
     """
-    M.Tech Thesis Neuro-Symbolic Guardrail Layer.
+    Neuro-Symbolic Guardrail Layer.
     Intercepts connectionist visibility predictions at runtime and cross-examines
     them against deterministic meteorological axioms using Microsoft Research's Z3 SMT Solver.
     """
@@ -34,7 +34,7 @@ class SymbolicGuardrail:
         )
         
         # Axiom 3: Aerosol Attenuation Boundary
-        # Maximum optical range (> 3500m) is physically impossible under extreme Kanpur aerosol optical load (AOD > 1.8)
+        # Maximum optical range (> 3500m) is physically impossible under extreme regional aerosol optical load (AOD > 1.8)
         self.axiom_aerosol = z3.Implies(
             self.aod > 1.8,
             self.visibility <= 3500.0
@@ -134,7 +134,7 @@ def run_tests():
     assert is_sat == False
     assert val == 2500.0
     
-    # Test 4: Aerosol Violation (Model predicted 4500m visibility under extreme Kanpur AOD load)
+    # Test 4: Aerosol Violation (Model predicted 4500m visibility under extreme regional AOD load)
     is_sat, val, status, rules = guard.verify_prediction(
         raw_pred=4500.0, rh_val=40.0, dpd_val=8.0, wsi_val=0.0, aod_val=2.2
     )

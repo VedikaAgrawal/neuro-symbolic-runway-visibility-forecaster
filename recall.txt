@@ -1,6 +1,6 @@
-Here is a complete, birds-eye-view roadmap of exactly what your M.Tech project is going to do, what your models will predict, and which models will be used where.
+Here is a complete, birds-eye-view roadmap of exactly what your project is going to do, what your models will predict, and which models will be used where.
 
-As outlined in your thesis blueprint, this project is a Neuro-Symbolic Spatial-Temporal visibility forecasting system. It combines advanced machine learning ("the Neuro Brain") with mathematically rigid physical weather laws ("the Symbolic Guardrail").
+As outlined in your project blueprint, this project is a Neuro-Symbolic Spatial-Temporal visibility forecasting system. It combines advanced machine learning ("the Neuro Brain") with mathematically rigid physical weather laws ("the Symbolic Guardrail").
 
 1. What is your model going to predict?
 Your models will predict three key targets:
@@ -9,7 +9,7 @@ Target Variable: Ground-truth IGI Runway Visibility (airport_visibility) in mete
 Forecasting Horizon: Forward-looking visibility predictions from $t+1$ to $t+6$ hours into the future, using historical patterns from the preceding 24 hours.
 Visibility Collapse Events: Probabilistic predictions flagging sudden drops in runway visibility below safety-critical aviation operation thresholds (specifically $< 800$ meters and $< 500$ meters).
 2. Which models will be used, and where?
-To maximize the academic validity and publishability of your thesis, we will build a Neuro-Symbolic Architecture split into two distinct layers:
+To maximize the validity of your project, we will build a Neuro-Symbolic Architecture split into two distinct layers:
 
 Layer A: The Connectionist Layer ("The Neuro Brain")
 This layer is responsible for taking your 50 engineered physical features and predicting the forward visibility horizons. We will train and benchmark three distinct archetypes:
@@ -21,7 +21,7 @@ Where: Used to capture chronological weather trends and the temporal progression
 Spatial-Temporal Benchmarks (Conv-LSTM or Temporal Fusion Transformers):
 Where: Used to map time-series trends and spatial correlations across the three weather stations (IGI Airport, Safdarjung urban, and Rohtak rural) concurrently.
 Layer B: The Deterministic Boundary Layer ("The Symbolic Guardrail")
-This is the core scientific contribution of your thesis. Rather than trusting "black-box" machine learning predictions blindly, we build a mathematical guardrail:
+This is the core scientific contribution of your project. Rather than trusting "black-box" machine learning predictions blindly, we build a mathematical guardrail:
 
 Tool: Microsoft Research's Z3 SMT (Satisfiability Modulo Theories) Solver.
 Where: It intercepts the deep neural network’s predictive outputs at runtime and cross-examines them against deterministic physical weather boundaries.
@@ -36,7 +36,7 @@ graph TD
     E -->|Safety-Critical Metrics| F[Phase 6: Micro-Service Containerization]
     F -->|Docker & Flask| G[Render Web Deployment]
     
-Phase 1: Data Ingestion & Fusion (COMPLETED): Handled raw ISD fixed-width records and merged NASA daily Kanpur AOD averages onto a continuous, synchronized 8,784-hour chronological timeline.
+Phase 1: Data Ingestion & Fusion (COMPLETED): Handled raw ISD fixed-width records and merged NASA daily regional AOD averages onto a continuous, synchronized 8,784-hour chronological timeline.
 Phase 2: Domain-Knowledge Feature Engineering (COMPLETED): Constructed our 25-column thermodynamic, kinematic, aerosol, microclimate, and cyclic temporal coordinate proxies.
 Phase 3: Multi-Model Benchmark (NEXT): Write the modeling notebook 03_visibility_modeling.ipynb, train Random Forests, XGBoost, and LSTM/GRU models on our 50 engineered features, and track predictions from $t+1$ to $t+6$ hours.
 Phase 4: Z3 Safety Verification: Write the formal verification layer in Python using the Z3 solver to prevent black-box physical axiom violations.
